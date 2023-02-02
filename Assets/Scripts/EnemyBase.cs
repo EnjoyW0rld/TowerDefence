@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public class EnemyBase : MonoBehaviour
@@ -13,6 +14,8 @@ public class EnemyBase : MonoBehaviour
     private Queue<Vector3> _path;
     private Vector3 _targetPostition;
     private Vector3 _direction;
+
+    [HideInInspector] public UnityEvent<EnemyBase> OnReachTheEnd;
 
     private void Start()
     {
@@ -29,10 +32,18 @@ public class EnemyBase : MonoBehaviour
     protected virtual void Update()
     {
         transform.position += Speed * Time.deltaTime * _direction;
-        if((_targetPostition - transform.position).magnitude < 0.2f)
+        if ((_targetPostition - transform.position).magnitude < 0.2f)
         {
-            _targetPostition = _path.Dequeue();
-            _direction = GetDirection();
+            if (_path.Count > 0)
+            {
+                _targetPostition = _path.Dequeue();
+                _direction = GetDirection();
+            }
+            else
+            {
+                OnReachTheEnd?.Invoke(this);
+                Destroy(this.gameObject);
+            }
 
         }
     }

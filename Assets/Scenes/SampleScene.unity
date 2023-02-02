@@ -217,6 +217,8 @@ GameObject:
   m_Component:
   - component: {fileID: 649772150}
   - component: {fileID: 649772149}
+  - component: {fileID: 649772152}
+  - component: {fileID: 649772151}
   m_Layer: 0
   m_Name: Waves
   m_TagString: Untagged
@@ -237,6 +239,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 4047919244190826825, guid: df2a8cf5880cb6a40b55a9505803a415, type: 3}
+  _enemiesToLose: 1
+  wave:
+    EnemyCount: 0
+    SpawnDelay: 0
+    enemyTypes:
+    - Type: {fileID: 0}
+      SpawnChance: 0
 --- !u!4 &649772150
 Transform:
   m_ObjectHideFlags: 0
@@ -252,6 +261,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &649772151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649772148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54c2b9c5828bda64d8cdb4cd207d2893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sniperTower: {fileID: 1819662105908648634, guid: 17966b1217f73974abfe22161653aca8, type: 3}
+--- !u!114 &649772152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649772148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e75218fa5966a41891b287018572fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1042753675
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,6 +297,7 @@ GameObject:
   - component: {fileID: 1042753677}
   - component: {fileID: 1042753679}
   - component: {fileID: 1042753678}
+  - component: {fileID: 1042753680}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -397,7 +432,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pathPoints:
-  - {x: -8.89, y: 0, z: 0}
-  - {x: -3.98, y: 2.74, z: 0}
-  - {x: -0.97, y: -2.27, z: 0}
-  - {x: 8.22, y: -0, z: 0}
+  - {x: -8.87, y: 0, z: 0}
+  - {x: -3.86, y: 2.74, z: 0}
+  - {x: -0.04, y: -2.27, z: 0}
+  - {x: 8.89, y: -0, z: 0}
+--- !u!68 &1042753680
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042753675}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.88, y: 0.17}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -8.89, y: 0}
+  - {x: -3.94, y: 2.74}
+  - {x: -0.97, y: -2.27}
+  - {x: 8.88, y: -0}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
