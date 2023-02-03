@@ -186,6 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shootRadius: 1
   _shootSpeed: 4
+  _damage: 1
   _boxCollider: {fileID: 0}
   _radiusCircle: {fileID: 8720339418494904462}
 --- !u!61 &5733437215044360291

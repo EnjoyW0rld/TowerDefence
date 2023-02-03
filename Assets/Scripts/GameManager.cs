@@ -5,18 +5,23 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    enum GamePhase { attack, build }
+    public enum GamePhase { Attack, Build }
 
-    private GamePhase _gamePhase = GamePhase.build;
+    private GamePhase _gamePhase = GamePhase.Build;
 
     private List<Tower> _placedTowers;
     private Tower _currentTower;
     private WaveManager _waveManager;
+    private EventManager _eventManager;
+    private int _moneyAmount;
 
-    [SerializeField] GameObject sniperTower;
+    [SerializeField] private GameObject sniperTower;
 
     private void Start()
     {
+        _eventManager = FindObjectOfType<EventManager>();
+        _eventManager.OnEnemyDeath.AddListener(UpdateMoneyAmount);
+
         _placedTowers = new List<Tower>();
         _waveManager = FindObjectOfType<WaveManager>();
     }
@@ -25,17 +30,17 @@ public class GameManager : MonoBehaviour
     {
         switch (_gamePhase)
         {
-            case GamePhase.attack:
+            case GamePhase.Attack:
                 AttackPhaseManager();
                 break;
-            case GamePhase.build:
+            case GamePhase.Build:
                 BuildPhaseManager();
                 break;
 
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            _gamePhase = GamePhase.attack;
+            ChangePhase(GamePhase.Attack);
         }
     }
 
@@ -75,4 +80,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void ChangePhase(GamePhase phase)
+    {
+        _gamePhase = phase;
+        _eventManager?.OnPhaseChange.Invoke(_gamePhase);
+    }
+    private void UpdateMoneyAmount(int moneyToAdd)
+    {
+        _moneyAmount += moneyToAdd;
+        _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
+    }
 }

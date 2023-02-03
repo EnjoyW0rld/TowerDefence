@@ -9,6 +9,7 @@ public class Tower : MonoBehaviour
 {
     [SerializeField] protected int _shootRadius;
     [SerializeField] protected float _shootSpeed;
+    [SerializeField] protected int _damage;
     private float _timeToShoot;
 
     [SerializeField] private BoxCollider2D _boxCollider;
@@ -29,7 +30,6 @@ public class Tower : MonoBehaviour
             canShoot = true;
             return;
         }
-        print("time gets decreased");
         _timeToShoot -= Time.deltaTime;
     }
 
@@ -48,4 +48,5 @@ public class Tower : MonoBehaviour
     }
     public int GetShootRadius() => _shootRadius;
     public bool IsColliding() => _isColliding;
+    public int GetDamage() => _damage;
 }
