@@ -680,11 +680,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50dea3d44989fee42be18dfef95d1cc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pathPoints:
-  - {x: -0.88888836, y: 0.5, z: 0}
-  - {x: -4.4444447, y: 2.5, z: 0}
-  - {x: -0.88888836, y: -2.5, z: 0}
-  - {x: 8, y: 0.5, z: 0}
+  _pathPointsGrid:
+  - x: 0
+    y: 5
+    pos: {x: -8, y: 0.5, z: 0}
+  - x: 0
+    y: 7
+    pos: {x: -8, y: 2.5, z: 0}
+  - x: 3
+    y: 7
+    pos: {x: -2.6666665, y: 2.5, z: 0}
+  - x: 3
+    y: 3
+    pos: {x: -2.6666665, y: -1.5, z: 0}
+  - x: 9
+    y: 3
+    pos: {x: 8, y: -1.5, z: 0}
 --- !u!68 &1042753680
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -726,6 +737,7 @@ MonoBehaviour:
   _horizontalStep: 1.7777779
   _gridStart: {x: -8.888889, y: -5, z: 0}
   topRight: {x: 8.888889, y: 5, z: 0}
+  _showGrid: 1
 --- !u!212 &1042753682
 SpriteRenderer:
   m_ObjectHideFlags: 0

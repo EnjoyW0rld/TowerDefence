@@ -46,7 +46,6 @@ public class WaveManager : MonoBehaviour
             float distanceToTower = (_enemies[i].transform.position - tower.transform.position).magnitude;
             if (distanceToTower <= tower.GetShootRadius())
             {
-                    print("damaged enemy");
                 if (_enemies[i].DamageThis(tower.GetDamage()))
                 {
                     Destroy(_enemies[i].gameObject);

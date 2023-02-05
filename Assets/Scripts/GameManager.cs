@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private Tower _currentTower;
     private WaveManager _waveManager;
     private EventManager _eventManager;
+    private GridMap _gridMap;
     private int _moneyAmount;
 
     [SerializeField] private GameObject sniperTower;
@@ -24,6 +25,8 @@ public class GameManager : MonoBehaviour
 
         _placedTowers = new List<Tower>();
         _waveManager = FindObjectOfType<WaveManager>();
+
+        _gridMap = FindObjectOfType<GridMap>();
     }
 
     private void Update()
@@ -62,6 +65,7 @@ public class GameManager : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
         mousePos.z = 0;
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             _currentTower = Instantiate(sniperTower, mousePos, Quaternion.identity).GetComponent<Tower>();
@@ -69,11 +73,12 @@ public class GameManager : MonoBehaviour
 
         if (_currentTower == null) return;
 
-        _currentTower.transform.position = mousePos;
+        _currentTower.transform.position = _gridMap.GetPosAtGridCenter(mousePos);
         if (Input.GetMouseButtonDown(0))
         {
-            if (!_currentTower.IsColliding())
+            if (_gridMap.isCellEmpty(mousePos))
             {
+                _gridMap.OccupyGridCell(mousePos);
                 _placedTowers.Add(_currentTower);
                 _currentTower = null;
             }

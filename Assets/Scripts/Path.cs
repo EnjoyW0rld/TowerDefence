@@ -1,34 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    [SerializeField] private Vector3[] _pathPoints;
-    [SerializeField] private List<int[]> _pathPointsOnGrid;
+    private Vector3[] _pathPoints;
+    [SerializeField] private PathPoint[] _pathPointsGrid;
 
     private LineRenderer _lineRenderer;
     private EdgeCollider2D _edgeCollider;
 
     private GridMap _gridMap;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _edgeCollider = GetComponent<EdgeCollider2D>();
         _lineRenderer = GetComponent<LineRenderer>();
 
-        _lineRenderer.positionCount = _pathPoints.Length;
+        _lineRenderer.positionCount = _pathPointsGrid.Length;
+        _pathPoints = PathPoints2vec3();
         _lineRenderer.SetPositions(_pathPoints);
         _edgeCollider.SetPoints(Vec3ToVec2(_pathPoints));
 
-        //_route = new Queue<Vector3>(_pathPoints);
     }
 
     private void OnDrawGizmosSelected()
     {
-        for (int i = 0; i < _pathPoints.Length; i++)
+        for (int i = 0; i < _pathPointsGrid.Length; i++)
         {
-            Vector3 pos = new Vector3(_pathPoints[i].x, _pathPoints[i].y, 0);
+            Vector3 pos = new Vector3(_pathPointsGrid[i].pos.x, _pathPointsGrid[i].pos.y, 0);
             Gizmos.DrawWireSphere(pos, .3f);
             UnityEditor.Handles.Label(pos + new Vector3(0, 0, -1), i.ToString());
         }
@@ -36,6 +37,15 @@ public class Path : MonoBehaviour
 
     public Queue<Vector3> GetRoute() => new Queue<Vector3>(_pathPoints);
     public Vector3 GetFirstPoint() => _pathPoints[0];
+    private Vector3[] PathPoints2vec3()
+    {
+        Vector3[] positions = new Vector3[_pathPointsGrid.Length];
+        for (int i = 0; i < _pathPointsGrid.Length; i++)
+        {
+            positions[i] = _pathPointsGrid[i].pos;
+        }
+        return positions;
+    }
     List<Vector2> Vec3ToVec2(Vector3[] vec3)
     {
         List<Vector2> res = new List<Vector2>();
@@ -47,6 +57,7 @@ public class Path : MonoBehaviour
     }
     private void OnValidate()
     {
+
         //null check for grid map
         if (_gridMap == null)
         {
@@ -58,10 +69,20 @@ public class Path : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < _pathPoints.Length; i++)
+        for (int i = 0; i < _pathPointsGrid.Length; i++)
         {
-            Vector3 newPos = _gridMap.GetPosAtGridCenter(_pathPoints[i]);
-            _pathPoints[i] = newPos;
+            Vector3 newPos = _gridMap.GetPosAtGridCenter(_pathPointsGrid[i].ToArray());
+
+            _pathPointsGrid[i].pos = newPos;
         }
     }
+}
+[Serializable]
+class PathPoint
+{
+    public int x;
+    public int y;
+    [HideInInspector] public Vector3 pos;
+    public int[] ToArray() => new int[] { x, y };
+
 }

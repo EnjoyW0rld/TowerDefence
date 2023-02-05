@@ -10,6 +10,7 @@ public class GridMap : MonoBehaviour
     int[,] _grid;
 
     [SerializeField] Vector3 topRight;
+    [SerializeField] private bool _showGrid;
 
     void Start()
     {
@@ -27,12 +28,6 @@ public class GridMap : MonoBehaviour
         Vector3 res = Camera.main.ScreenToWorldPoint(vec);
         res.z = 0;
         return res;
-    }
-    private void OnDrawGizmos()
-    {
-        Rect rect = Camera.main.pixelRect;
-
-        Gizmos.DrawSphere(CameraToWorld(new Vector3(rect.xMax, rect.yMax)), 1);
     }
     private void FillGrid()
     {
@@ -83,6 +78,29 @@ public class GridMap : MonoBehaviour
         return GetPosAtGridCenter(gridNum);
     }
 
+    public bool isCellEmpty(Vector3 pos)
+    {
+        return isCellEmpty(GetGridNumber(pos));
+    }
+    public bool isCellEmpty(int[] gridNumber)
+    {
+        return _grid[gridNumber[0], gridNumber[1]] == 1;
+    }
+
+    public void OccupyGridCell(Vector3 pos)
+    {
+        OccupyGridCell(GetGridNumber(pos));
+    }
+    public void OccupyGridCell(int[] gridNumber)
+    {
+        if (_grid[gridNumber[0], gridNumber[1]] == 0)
+        {
+            Debug.LogError("grid cell is already occupied!");
+            return;
+        }
+        _grid[gridNumber[0], gridNumber[1]] = 0;
+    }
+
     [ContextMenu("Recalculate grid")]
     private void RecalculateGrid()
     {
@@ -95,5 +113,26 @@ public class GridMap : MonoBehaviour
 
         _verticalStep = (topRight.y - _gridStart.y) / _density;
         _horizontalStep = (topRight.x - _gridStart.x) / _density;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        if (_showGrid)
+        {
+            if (_grid == null)
+            {
+                RecalculateGrid();
+            }
+            for (int x = 0; x < _grid.GetLength(0); x++)
+            {
+                for (int y = 0; y < _grid.GetLength(1); y++)
+                {
+                    int[] pos = new int[] { x, y };
+                    Gizmos.DrawWireCube(GetPosAtGridCenter(pos), new Vector3(_horizontalStep, _verticalStep));
+                }
+            }
+
+        }
     }
 }

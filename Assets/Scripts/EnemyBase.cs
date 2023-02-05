@@ -17,7 +17,7 @@ public class EnemyBase : MonoBehaviour
     private Queue<Vector3> _path;
     private Vector3 _targetPostition;
     private Vector3 _direction;
-
+    
     [HideInInspector] public UnityEvent<EnemyBase> OnReachTheEnd;
 
     public void SetValues(EnemyScriptBase enemyProperties)
@@ -70,7 +70,6 @@ public class EnemyBase : MonoBehaviour
     {
 
         _remainingHealth -= damage;
-        print(_remainingHealth);
         return _remainingHealth <= 0;
     }
     
