@@ -55,6 +55,7 @@ public class Path : MonoBehaviour
         }
         return res;
     }
+    public PathPoint[] GetPathPoints() => _pathPointsGrid;
     private void OnValidate()
     {
 
@@ -78,7 +79,7 @@ public class Path : MonoBehaviour
     }
 }
 [Serializable]
-class PathPoint
+public class PathPoint
 {
     public int x;
     public int y;

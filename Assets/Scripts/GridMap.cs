@@ -15,6 +15,7 @@ public class GridMap : MonoBehaviour
     void Start()
     {
         RecalculateGrid();
+        OccupyPathTiles();
     }
 
     private void Update()
@@ -115,6 +116,34 @@ public class GridMap : MonoBehaviour
         _horizontalStep = (topRight.x - _gridStart.x) / _density;
     }
 
+    /// <summary>
+    /// Used to make set tiles on path to be occupied
+    /// </summary>
+    private void OccupyPathTiles()
+    {
+
+        Path path = FindObjectOfType<Path>();
+        PathPoint[] pathPoints = path.GetPathPoints();
+        for (int i = 0; i < pathPoints.Length - 1; i++)
+        {
+            if (pathPoints[i].x == pathPoints[i + 1].x)
+            {
+                int step = pathPoints[i].y > pathPoints[i + 1].y ? -1 : 1;
+                for (int y = pathPoints[i].y; y != pathPoints[i + 1].y + step; y += step)
+                {
+                    _grid[pathPoints[i].x, y] = 0;
+                }
+            }
+            else
+            {
+                int step = pathPoints[i].x > pathPoints[i + 1].x ? -1 : 1;
+                for (int x = pathPoints[i].x; x != pathPoints[i + 1].x + step; x += step)
+                {
+                    _grid[x, pathPoints[i].y] = 0;
+                }
+            }
+        }
+    }
 
     private void OnDrawGizmos()
     {
@@ -128,6 +157,14 @@ public class GridMap : MonoBehaviour
             {
                 for (int y = 0; y < _grid.GetLength(1); y++)
                 {
+                    if (_grid[x, y] == 1)
+                    {
+                        Gizmos.color = Color.red;
+                    }
+                    else
+                    {
+                        Gizmos.color = Color.white;
+                    }
                     int[] pos = new int[] { x, y };
                     Gizmos.DrawWireCube(GetPosAtGridCenter(pos), new Vector3(_horizontalStep, _verticalStep));
                 }
