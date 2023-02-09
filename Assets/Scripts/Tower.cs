@@ -64,8 +64,7 @@ public class Tower : MonoBehaviour
         _shootSpeed = _properties.TowerLevels[_towerLevel].ShootSpeed;
         _damage = _properties.TowerLevels[_towerLevel].Damage;
 
-
-        _radiusCircle.localScale = new Vector3(_shootRadius * 2, _shootRadius * 2, 0);
+        _radiusCircle.localScale = new Vector3(_shootRadius * 2 / transform.localScale.x, _shootRadius * 2 / transform.localScale.y, 0);
         _timeToShoot = _shootSpeed;
     }
 

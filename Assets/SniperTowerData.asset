@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b977fc5a183d0584fb8da4c35c6e1416, type: 3}
   m_Name: SniperTowerData
   m_EditorClassIdentifier: 
-  TowerLevels: []
+  TowerLevels:
+  - ShootRadius: 1
+    ShootSpeed: 1
+    Damage: 1
+    Price: 0
+  - ShootRadius: 3
+    ShootSpeed: 1
+    Damage: 2
+    Price: 50

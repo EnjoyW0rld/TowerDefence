@@ -5,7 +5,7 @@ using UnityEngine;
 public class GridMap : MonoBehaviour
 {
     [SerializeField] private int _density;
-    [SerializeField] private float _verticalStep, _horizontalStep;
+    [SerializeField] private float _step;// _horizontalStep;
     [SerializeField] Vector3 _gridStart;
     int[,] _grid;
 
@@ -24,7 +24,7 @@ public class GridMap : MonoBehaviour
         SnapToGrid(mousePos);
     }
 
-    private Vector3 CameraToWorld(Vector3 vec)
+    public static Vector3 CameraToWorld(Vector3 vec)
     {
         Vector3 res = Camera.main.ScreenToWorldPoint(vec);
         res.z = 0;
@@ -43,7 +43,7 @@ public class GridMap : MonoBehaviour
     void SnapToGrid(Vector3 pos)
     {
         int[] gridNumber = GetGridNumber(pos);
-        Vector3 clampedPos = new Vector3(gridNumber[0] * _horizontalStep, gridNumber[1] * _verticalStep);
+        Vector3 clampedPos = new Vector3(gridNumber[0] * _step, gridNumber[1] * _step);
         transform.position = _gridStart + clampedPos;
     }
     /// <summary>
@@ -56,8 +56,8 @@ public class GridMap : MonoBehaviour
         Vector3 normPos = pos - _gridStart;
         int[] res =
         {
-            (int)(normPos.x / _horizontalStep),
-            (int)(normPos.y / _verticalStep)
+            (int)(normPos.x / _step),
+            (int)(normPos.y / _step)
         };
         res[0] = res[0] < 0 ? 0 : res[0];
         res[0] = res[0] > _grid.GetLength(0) - 1 ? _grid.GetLength(0) - 1 : res[0];
@@ -70,7 +70,7 @@ public class GridMap : MonoBehaviour
 
     public Vector3 GetPosAtGridCenter(int[] gridNum)
     {
-        Vector3 res = new Vector3(gridNum[0] * _horizontalStep + _horizontalStep / 2, gridNum[1] * _verticalStep + _verticalStep / 2, 0);
+        Vector3 res = new Vector3(gridNum[0] * _step + _step / 2, gridNum[1] * _step + _step / 2, 0);
         return res + _gridStart;
     }
     public Vector3 GetPosAtGridCenter(Vector3 pos)
@@ -115,16 +115,23 @@ public class GridMap : MonoBehaviour
     [ContextMenu("Recalculate grid")]
     private void RecalculateGrid()
     {
-        _grid = new int[_density, _density];
-        FillGrid();
 
         Rect rect = Camera.main.pixelRect;
         _gridStart = CameraToWorld(new Vector3(rect.x, rect.y));
         topRight = CameraToWorld(new Vector3(rect.xMax, rect.yMax));
 
-        _verticalStep = (topRight.y - _gridStart.y) / _density;
-        _horizontalStep = (topRight.x - _gridStart.x) / _density;
+        //_step = 1;//(topRight.y - _gridStart.y) / _density;
+        //_step = 1.11f;//GCD(topRight.x - _gridStart.x, topRight.y - _gridStart.y);
+        float aspect = Camera.main.aspect;
+        //_step = aspect;
+        //(topRight.x - _gridStart.x) * _step = 16;
+        _step = (topRight.y - _gridStart.y) / 9 / _density;
+        //(topRight.y - _gridStart.y) * _step = 9;
+        //print((topRight.x - _gridStart.x) / );
+        _grid = new int[(int)((topRight.x - _gridStart.x) / _step), (int)((topRight.y - _gridStart.y) / _step) + 1];
+        FillGrid();
     }
+
 
     /// <summary>
     /// Used to make set tiles on path to be occupied
@@ -177,10 +184,14 @@ public class GridMap : MonoBehaviour
                         Gizmos.color = Color.white;
                     }
                     int[] pos = new int[] { x, y };
-                    Gizmos.DrawWireCube(GetPosAtGridCenter(pos), new Vector3(_horizontalStep, _verticalStep));
+                    Gizmos.DrawWireCube(GetPosAtGridCenter(pos), new Vector3(_step, _step));
                 }
             }
 
         }
+    }
+    private void OnValidate()
+    {
+        RecalculateGrid();
     }
 }

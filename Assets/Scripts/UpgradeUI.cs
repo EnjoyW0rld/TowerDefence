@@ -34,16 +34,17 @@ public class UpgradeUI : MonoBehaviour
         {
             _canUpgrade = true;
         }
+        else
+        {
+            _canUpgrade = false;
+        }
+        _canvas.enabled = _canUpgrade;
     }
     private void OnPhaseChange(GameManager.GamePhase phase)
     {
         if (phase == GameManager.GamePhase.Build)
         {
-            if (_canUpgrade)
-            {
-                //_canvas.gameObject.SetActive(true);
-                _canvas.enabled = true;
-            }
+            _canvas.enabled = _canUpgrade;
         }
         else
         {

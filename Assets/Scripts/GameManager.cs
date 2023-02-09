@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     {
         _eventManager = FindObjectOfType<EventManager>();
         _eventManager.OnEnemyDeath.AddListener(UpdateMoneyAmount);
+        _eventManager.OnPhaseChange.AddListener(OnPhaseChange);
 
         _placedTowers = new List<Tower>();
         _waveManager = FindObjectOfType<WaveManager>();
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            ChangePhase(GamePhase.Attack);
+            _eventManager.OnPhaseChange?.Invoke(GamePhase.Attack);//ChangePhase(GamePhase.Attack);
         }
     }
 
@@ -85,6 +86,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Tower tower = GetTowerOnPos(mousePos);
+            print(tower);
             if (tower != null)
             {
                 int price = tower.LvlUpPrice();
@@ -109,6 +111,7 @@ public class GameManager : MonoBehaviour
                 _currentTower = null;
             }
         }
+
     }
 
     private Tower GetTowerOnPos(Vector3 pos)
@@ -124,10 +127,9 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    private void ChangePhase(GamePhase phase)
+    private void OnPhaseChange(GamePhase phase)
     {
         _gamePhase = phase;
-        _eventManager?.OnPhaseChange.Invoke(_gamePhase);
     }
     private void UpdateMoneyAmount(EnemyBase enemy)
     {
