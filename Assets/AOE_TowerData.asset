@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b977fc5a183d0584fb8da4c35c6e1416, type: 3}
   m_Name: AOE_TowerData
   m_EditorClassIdentifier: 
-  TowerLevels: []
+  TowerLevels:
+  - ShootRadius: 2
+    ShootSpeed: 1
+    Damage: 1
+    Price: 0

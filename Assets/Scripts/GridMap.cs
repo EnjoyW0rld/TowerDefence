@@ -24,7 +24,7 @@ public class GridMap : MonoBehaviour
         SnapToGrid(mousePos);
     }
 
-    public static Vector3 CameraToWorld(Vector3 vec)
+    private Vector3 CameraToWorld(Vector3 vec)
     {
         Vector3 res = Camera.main.ScreenToWorldPoint(vec);
         res.z = 0;

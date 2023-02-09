@@ -38,7 +38,7 @@ public class Tower : MonoBehaviour
         }
         _timeToShoot -= Time.deltaTime;
     }
-
+    /*
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         _isColliding = true;
@@ -47,6 +47,8 @@ public class Tower : MonoBehaviour
     {
         _isColliding = false;
     }
+     */
+
     public void UpdateCooldown()
     {
         canShoot = false;

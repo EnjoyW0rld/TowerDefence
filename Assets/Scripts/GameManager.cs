@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
     }
     private void UpdateMoneyAmount(EnemyBase enemy)
     {
-        _moneyAmount += enemy.Money;
+        _moneyAmount += enemy.GetMoney();
         _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
     }
 }

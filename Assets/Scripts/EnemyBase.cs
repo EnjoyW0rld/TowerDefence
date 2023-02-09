@@ -7,13 +7,17 @@ using UnityEngine.Events;
 [Serializable]
 public class EnemyBase : MonoBehaviour
 {
-    public int Health { get { return _enemyProperties.Health; } }
-    public int Speed { get { return _enemyProperties.Speed; } }
-    public int Money { get { return _enemyProperties.Money; } }
+    //public int Health { get { return _enemyProperties.Health; } }
+    //public int Speed { get { return _enemyProperties.Speed; } }
+    //public int Money { get { return _enemyProperties.Money; } }
 
-    private int _originalSpeed;
-
+    private int _maxHealth;
     private int _remainingHealth;
+    private int _money;
+
+    private float _currentSpeed;
+    private float _originalSpeed;
+
     private EnemyScriptBase _enemyProperties;
 
     private Queue<Vector3> _path;
@@ -30,12 +34,12 @@ public class EnemyBase : MonoBehaviour
 
 
         _enemyProperties = enemyProperties;
-        _remainingHealth = _enemyProperties.Health;
+
+        _currentSpeed = _enemyProperties.Speed;
         _originalSpeed = _enemyProperties.Speed;
-    }
-    public EnemyBase(EnemyScriptBase enemyProperties)
-    {
-        _enemyProperties = enemyProperties;
+
+        _money = _enemyProperties.Money;
+        _remainingHealth = _enemyProperties.Health;
     }
 
     private void Start()
@@ -52,7 +56,7 @@ public class EnemyBase : MonoBehaviour
 
     protected virtual void Update()
     {
-        transform.position += Speed * Time.deltaTime * _direction;
+        transform.position += _currentSpeed * Time.deltaTime * _direction;
         if ((_targetPostition - transform.position).magnitude < 0.2f)
         {
             if (_path.Count > 0)
@@ -69,13 +73,28 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
-    protected virtual void ApplyEffect()
+    protected virtual void UpdateEffect()
     {
         if (_effect == null) return;
         if(_effect.Duration > 0)
         {
-            //Speed = _originalSpeed * 
+            _currentSpeed = _originalSpeed * _effect.Modifier;
         }
+        else
+        {
+            _currentSpeed = _originalSpeed;
+            _effect = null;
+        }
+        _effect.RemainingDuration -= Time.deltaTime;
+    }
+    public bool SetEffect(Effect effect)
+    {
+        if(effect == null)
+        {
+            _effect = effect;
+            return true;
+        }
+        return false;
     }
 
     private Vector3 GetDirection() => (_targetPostition - transform.position).normalized;
@@ -94,12 +113,15 @@ public class EnemyBase : MonoBehaviour
         }
         return _remainingHealth <= 0;
     }
+
     public int GetRemainingHealth() => _remainingHealth;
+    public int GetMaxHealth() => _maxHealth;
+    public int GetMoney() => _money;
 
 }
 
 [Serializable]
-class Effect
+public class Effect
 {
     public float Duration;
     [HideInInspector] public float RemainingDuration;
