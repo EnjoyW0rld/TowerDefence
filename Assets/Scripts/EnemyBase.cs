@@ -22,6 +22,9 @@ public class EnemyBase : MonoBehaviour
 
     public void SetValues(EnemyScriptBase enemyProperties)
     {
+        GetComponent<SpriteRenderer>().sprite = enemyProperties.Sprite;
+        
+
         _enemyProperties = enemyProperties;
         _remainingHealth = _enemyProperties.Health;
     }
@@ -68,9 +71,14 @@ public class EnemyBase : MonoBehaviour
     /// <returns></returns>
     public bool DamageThis(int damage)
     {
-
         _remainingHealth -= damage;
+        if(_remainingHealth <= 0)
+        {
+            print("enemy died");
+            FindObjectOfType<EventManager>().OnEnemyDeath?.Invoke(this);
+        }
         return _remainingHealth <= 0;
     }
+    public int GetRemainingHealth() => _remainingHealth;
     
 }

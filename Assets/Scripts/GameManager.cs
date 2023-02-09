@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private WaveManager _waveManager;
     private EventManager _eventManager;
     private GridMap _gridMap;
-    private int _moneyAmount;
+    private int _moneyAmount = 50;
 
     [SerializeField] private GameObject sniperTower;
 
@@ -55,7 +55,6 @@ public class GameManager : MonoBehaviour
             if (_waveManager.TryAttack(_placedTowers[i]))
             {
                 _placedTowers[i].UpdateCooldown();
-                //print("worked");
             }
         }
     }
@@ -66,14 +65,41 @@ public class GameManager : MonoBehaviour
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
         mousePos.z = 0;
 
+        mousePos = _gridMap.GetPosAtGridCenter(mousePos);
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             _currentTower = Instantiate(sniperTower, mousePos, Quaternion.identity).GetComponent<Tower>();
         }
+        else if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            Tower tower = GetTowerOnPos(mousePos);
+            if (tower != null)
+            {
+                _gridMap.FreeGridCell(tower.transform.position);
+                Destroy(tower.gameObject);
+                _placedTowers.Remove(tower);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Tower tower = GetTowerOnPos(mousePos);
+            if (tower != null)
+            {
+                int price = tower.LvlUpPrice();
+                if (price <= _moneyAmount && price != -1)
+                {
+                    tower.LvlUp();
+                    _moneyAmount -= price;
+                    _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
+                }
+            }
+        }
 
         if (_currentTower == null) return;
 
-        _currentTower.transform.position = _gridMap.GetPosAtGridCenter(mousePos);
+        _currentTower.transform.position = mousePos;
         if (Input.GetMouseButtonDown(0))
         {
             if (_gridMap.isCellEmpty(mousePos))
@@ -85,14 +111,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private Tower GetTowerOnPos(Vector3 pos)
+    {
+        if (_placedTowers.Count == 0) return null;
+        for (int i = 0; i < _placedTowers.Count; i++)
+        {
+            if (_placedTowers[i].transform.position == pos)
+            {
+                return _placedTowers[i];
+            }
+        }
+        return null;
+    }
+
     private void ChangePhase(GamePhase phase)
     {
         _gamePhase = phase;
         _eventManager?.OnPhaseChange.Invoke(_gamePhase);
     }
-    private void UpdateMoneyAmount(int moneyToAdd)
+    private void UpdateMoneyAmount(EnemyBase enemy)
     {
-        _moneyAmount += moneyToAdd;
+        _moneyAmount += enemy.Money;
         _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
     }
 }

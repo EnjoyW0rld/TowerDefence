@@ -7,5 +7,5 @@ public class EventManager : MonoBehaviour
 {
     public UnityEvent<int> OnMoneyChange; //passed value is current money count
     public UnityEvent<GameManager.GamePhase> OnPhaseChange;
-    public UnityEvent<int> OnEnemyDeath; //value is money dropped
+    public UnityEvent<EnemyBase> OnEnemyDeath; //value is money dropped
 }

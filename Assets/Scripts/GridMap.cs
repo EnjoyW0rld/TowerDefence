@@ -102,6 +102,16 @@ public class GridMap : MonoBehaviour
         _grid[gridNumber[0], gridNumber[1]] = 0;
     }
 
+    public void FreeGridCell(Vector3 pos)
+    {
+        FreeGridCell(GetGridNumber(pos));
+    }
+    public void FreeGridCell(int[] gridNumber)
+    {
+        _grid[gridNumber[0], gridNumber[1]] = 1;
+    }
+
+
     [ContextMenu("Recalculate grid")]
     private void RecalculateGrid()
     {
@@ -144,6 +154,7 @@ public class GridMap : MonoBehaviour
             }
         }
     }
+
 
     private void OnDrawGizmos()
     {

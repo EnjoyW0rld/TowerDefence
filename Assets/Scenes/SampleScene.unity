@@ -464,7 +464,6 @@ GameObject:
   m_Component:
   - component: {fileID: 649772150}
   - component: {fileID: 649772149}
-  - component: {fileID: 649772152}
   - component: {fileID: 649772151}
   m_Layer: 0
   m_Name: Waves
@@ -487,11 +486,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy: {fileID: 4047919244190826825, guid: df2a8cf5880cb6a40b55a9505803a415, type: 3}
   _enemiesToLose: 1
-  wave:
-    EnemyCount: 5
-    SpawnDelay: 3
+  _waves:
+  - EnemyCount: 5
+    SpawnDelay: 1
     enemyTypes:
     - Type: {fileID: 11400000, guid: 4428d83b61feb7e49830194d25042395, type: 2}
+      SpawnChance: 100
+  - EnemyCount: 3
+    SpawnDelay: 0.5
+    enemyTypes:
+    - Type: {fileID: 11400000, guid: 42f86e25773107341a5b9097c9703116, type: 2}
       SpawnChance: 100
 --- !u!4 &649772150
 Transform:
@@ -521,18 +525,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sniperTower: {fileID: 1819662105908648634, guid: 17966b1217f73974abfe22161653aca8, type: 3}
---- !u!114 &649772152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 649772148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56e75218fa5966a41891b287018572fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1042753675
 GameObject:
   m_ObjectHideFlags: 0
