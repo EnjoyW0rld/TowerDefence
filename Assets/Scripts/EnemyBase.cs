@@ -11,22 +11,27 @@ public class EnemyBase : MonoBehaviour
     public int Speed { get { return _enemyProperties.Speed; } }
     public int Money { get { return _enemyProperties.Money; } }
 
+    private int _originalSpeed;
+
     private int _remainingHealth;
     private EnemyScriptBase _enemyProperties;
 
     private Queue<Vector3> _path;
     private Vector3 _targetPostition;
     private Vector3 _direction;
-    
+
+    private Effect _effect;
+
     [HideInInspector] public UnityEvent<EnemyBase> OnReachTheEnd;
 
     public void SetValues(EnemyScriptBase enemyProperties)
     {
         GetComponent<SpriteRenderer>().sprite = enemyProperties.Sprite;
-        
+
 
         _enemyProperties = enemyProperties;
         _remainingHealth = _enemyProperties.Health;
+        _originalSpeed = _enemyProperties.Speed;
     }
     public EnemyBase(EnemyScriptBase enemyProperties)
     {
@@ -63,6 +68,16 @@ public class EnemyBase : MonoBehaviour
 
         }
     }
+
+    protected virtual void ApplyEffect()
+    {
+        if (_effect == null) return;
+        if(_effect.Duration > 0)
+        {
+            //Speed = _originalSpeed * 
+        }
+    }
+
     private Vector3 GetDirection() => (_targetPostition - transform.position).normalized;
     /// <summary>
     /// Applies damage to intance of enemy and return if it is alive
@@ -72,7 +87,7 @@ public class EnemyBase : MonoBehaviour
     public bool DamageThis(int damage)
     {
         _remainingHealth -= damage;
-        if(_remainingHealth <= 0)
+        if (_remainingHealth <= 0)
         {
             print("enemy died");
             FindObjectOfType<EventManager>().OnEnemyDeath?.Invoke(this);
@@ -80,5 +95,13 @@ public class EnemyBase : MonoBehaviour
         return _remainingHealth <= 0;
     }
     public int GetRemainingHealth() => _remainingHealth;
-    
+
+}
+
+[Serializable]
+class Effect
+{
+    public float Duration;
+    [HideInInspector] public float RemainingDuration;
+    [Tooltip("Value which enemy speed will be multiplied with")] public float Modifier;
 }

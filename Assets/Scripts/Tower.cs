@@ -36,7 +36,6 @@ public class Tower : MonoBehaviour
             canShoot = true;
             return;
         }
-
         _timeToShoot -= Time.deltaTime;
     }
 
