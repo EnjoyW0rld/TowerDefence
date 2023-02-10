@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.48235294}
   m_FlipX: 0
@@ -162,7 +162,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 144aa74618b85974a9a50f612c2fa8fd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c12deddc862f7854dbb4c34f2e5bb400, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -190,7 +190,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.48, y: 0.48}
+    oldSize: {x: 0.67, y: 0.67}
     newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -235,10 +235,6 @@ MonoBehaviour:
   _properties: {fileID: 11400000, guid: d81f78c7d5a7fea499cd32b302fb5e50, type: 2}
   _boxCollider: {fileID: 0}
   _radiusCircle: {fileID: 8720339418494904462}
-  _effect:
-    Duration: 2
-    RemainingDuration: 0
-    Modifier: 0.5
 --- !u!1 &3611553795421055994
 GameObject:
   m_ObjectHideFlags: 0
