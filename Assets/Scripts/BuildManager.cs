@@ -21,13 +21,22 @@ public class BuildManager : MonoBehaviour
     private GameManager _gameManager;
     private EventManager _eventManager;
 
+    [SerializeField] private float _buildPhaseTime;
+    private float _timeLeft;
+    [SerializeField] private TextMeshProUGUI _timeText;
+    private string _originalText;
+
     private void Start()
     {
+        if (_timeText != null) _originalText = _timeText.text;
+        else Debug.LogError("No text box assigned for build phase time");
+
         _placedTowers = new List<Tower>();
         _gridMap = FindObjectOfType<GridMap>();
         _gameManager = FindObjectOfType<GameManager>();
         _eventManager = FindObjectOfType<EventManager>();
         _eventManager.OnMoneyChange.AddListener(OnMoneyChanged);
+        _eventManager.OnPhaseChange.AddListener(OnPhaseChange);
 
         _towers = new Tower[_towerContainers.Length];
         for (int i = 0; i < _towerContainers.Length; i++)
@@ -37,8 +46,26 @@ public class BuildManager : MonoBehaviour
         }
     }
 
+
+    IEnumerator BuildPhaseTime()
+    {
+        while (_timeLeft > 0)
+        {
+            _timeLeft -= Time.deltaTime;
+            _timeText.text = _originalText + RoundFloat(_timeLeft, 2);
+            yield return null;
+        }
+
+
+        EndBuildPhase();
+        _timeText.gameObject.SetActive(false);
+        _eventManager.OnPhaseChange?.Invoke(GameManager.GamePhase.Attack);
+
+    }
+
     public void BuildPhaseManager()
     {
+
         Vector3 mousePos = Input.mousePosition;
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
         mousePos.z = 0;
@@ -58,41 +85,53 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-        }
+        if (Input.GetMouseButtonDown(0)) UpgradeTower(mousePos);
 
+        if (Input.GetKeyDown(KeyCode.Space)) _timeLeft = 0;
         if (_currentTower == null) return;
 
         _currentTower.transform.position = mousePos;
         if (Input.GetMouseButtonDown(0))
         {
-            if (_gridMap.isCellEmpty(mousePos))
-            {
-                _gridMap.OccupyGridCell(mousePos);
-                _placedTowers.Add(_currentTower);
-                _eventManager.OnMoneyChange?.Invoke(_gameManager.GetMoneyAmount() - _currentTower.BuildPrice());
-                _currentTower = null;
-                return;
-            }
+            PlaceTower(mousePos);
+        }
+    }
 
-            Tower tower = GetTowerOnPos(mousePos);
-            print(tower);
-            if (tower != null)
+    public void EndBuildPhase()
+    {
+        if (_currentTower != null)
+        {
+            Destroy(_currentTower.gameObject);
+            _currentTower = null;
+        }
+    }
+
+    private void PlaceTower(Vector3 mousePos)
+    {
+        if (_gridMap.isCellEmpty(mousePos))
+        {
+            _gridMap.OccupyGridCell(mousePos);
+            _placedTowers.Add(_currentTower);
+            _eventManager.OnMoneyChange?.Invoke(_gameManager.GetMoneyAmount() - _currentTower.BuildPrice());
+            _currentTower = null;
+        }
+    }
+    private void UpgradeTower(Vector3 mousePos)
+    {
+        Tower tower = GetTowerOnPos(mousePos);
+        if (tower != null)
+        {
+            int price = tower.LvlUpPrice();
+            int moneyAmount = _gameManager.GetMoneyAmount();
+            if (price <= moneyAmount && price != -1)
             {
-                int price = tower.LvlUpPrice();
-                int moneyAmount = _gameManager.GetMoneyAmount();
-                if (price <= moneyAmount && price != -1)
-                {
-                    tower.LvlUp();
-                    moneyAmount -= price;
-                    _eventManager.OnMoneyChange?.Invoke(moneyAmount);
-                }
+                tower.LvlUp();
+                moneyAmount -= price;
+                _eventManager.OnMoneyChange?.Invoke(moneyAmount);
             }
         }
 
     }
-
     private Tower GetTowerOnPos(Vector3 pos)
     {
         if (_placedTowers.Count == 0) return null;
@@ -106,6 +145,24 @@ public class BuildManager : MonoBehaviour
         return null;
     }
     public List<Tower> GetPlacedTowers() => _placedTowers;
+
+    private float RoundFloat(float value, int digits)
+    {
+        float multiplier = Mathf.Pow(10, digits);
+        int val = (int)(value * multiplier);
+        return val / multiplier;
+    }
+
+    private void OnPhaseChange(GameManager.GamePhase phase)
+    {
+        if (phase == GameManager.GamePhase.Build)
+        {
+            _timeText.gameObject.SetActive(true);
+            _timeLeft = _buildPhaseTime;
+            StartCoroutine(BuildPhaseTime());
+
+        }
+    }
 
     void OnMoneyChanged(int money)
     {

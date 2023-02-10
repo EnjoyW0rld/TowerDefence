@@ -9,13 +9,20 @@ public class GridMap : MonoBehaviour
     [SerializeField] Vector3 _gridStart;
     int[,] _grid;
 
-    [SerializeField] Vector3 topRight;
+    Vector3 _topRight;
     [SerializeField] private bool _showGrid;
+
+    [SerializeField] private GameObject _gridPalka;
 
     void Start()
     {
         RecalculateGrid();
         OccupyEssentialTiles();
+        Vector3 ff = _gridStart + new Vector3(0, _step * 3, 0);
+        GameObject temp = Instantiate(_gridPalka, ff, Quaternion.identity);
+        Vector3 scale = temp.transform.localScale;
+        scale.x = _topRight.x * 2;
+        temp.transform.localScale = scale;
     }
 
     private void Update()
@@ -23,6 +30,11 @@ public class GridMap : MonoBehaviour
         Vector3 mousePos = CameraToWorld(Input.mousePosition);
         SnapToGrid(mousePos);
     }
+
+
+    public Vector3[] GetGridBoundaries() => new Vector3[] { _gridStart, _topRight };
+    public int[] GetGridDimensions() => new int[] { _grid.GetLength(0), _grid.GetLength(1) };
+    public float GetStep() => _step;
 
     private Vector3 CameraToWorld(Vector3 vec)
     {
@@ -118,17 +130,11 @@ public class GridMap : MonoBehaviour
 
         Rect rect = Camera.main.pixelRect;
         _gridStart = CameraToWorld(new Vector3(rect.x, rect.y));
-        topRight = CameraToWorld(new Vector3(rect.xMax, rect.yMax));
+        _topRight = CameraToWorld(new Vector3(rect.xMax, rect.yMax));
 
-        //_step = 1;//(topRight.y - _gridStart.y) / _density;
-        //_step = 1.11f;//GCD(topRight.x - _gridStart.x, topRight.y - _gridStart.y);
         float aspect = Camera.main.aspect;
-        //_step = aspect;
-        //(topRight.x - _gridStart.x) * _step = 16;
-        _step = (topRight.y - _gridStart.y) / 9 / _density;
-        //(topRight.y - _gridStart.y) * _step = 9;
-        //print((topRight.x - _gridStart.x) / );
-        _grid = new int[(int)((topRight.x - _gridStart.x) / _step), (int)((topRight.y - _gridStart.y) / _step) + 1];
+        _step = (_topRight.y - _gridStart.y) / 9 / _density;
+        _grid = new int[(int)((_topRight.x - _gridStart.x) / _step), (int)((_topRight.y - _gridStart.y) / _step) + 1];
         FillGrid();
     }
 

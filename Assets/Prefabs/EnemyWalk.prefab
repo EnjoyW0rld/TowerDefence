@@ -262,6 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 751ee984007ae8344991113f40e3f484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moneyDropUI: {fileID: 6492141678586618559, guid: e2c8b08a90542ec4eb4839d34fc9df9c, type: 3}
   OnReachTheEnd:
     m_PersistentCalls:
       m_Calls: []

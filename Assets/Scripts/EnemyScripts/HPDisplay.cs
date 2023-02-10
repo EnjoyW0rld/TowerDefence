@@ -12,7 +12,6 @@ public class HPDisplay : MonoBehaviour
     void Start()
     {
         _maxHP = _parent.GetMaxHealth();
-        print(_maxHP);
         _originalScale = transform.localScale.x;
     }
     private void Update()

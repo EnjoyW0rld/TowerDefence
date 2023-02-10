@@ -7,10 +7,6 @@ using UnityEngine.Events;
 [Serializable]
 public class EnemyBase : MonoBehaviour
 {
-    //public int Health { get { return _enemyProperties.Health; } }
-    //public int Speed { get { return _enemyProperties.Speed; } }
-    //public int Money { get { return _enemyProperties.Money; } }
-
     private int _maxHealth;
     private int _remainingHealth;
     private int _money;
@@ -25,6 +21,7 @@ public class EnemyBase : MonoBehaviour
     private Vector3 _direction;
 
     private Effect _effect;
+    [SerializeField] private GameObject _moneyDropUI;
 
     [HideInInspector] public UnityEvent<EnemyBase> OnReachTheEnd;
 
@@ -39,6 +36,7 @@ public class EnemyBase : MonoBehaviour
         _originalSpeed = _enemyProperties.Speed;
 
         _money = _enemyProperties.Money;
+        _maxHealth = _enemyProperties.Health;
         _remainingHealth = _enemyProperties.Health;
     }
 
@@ -77,7 +75,7 @@ public class EnemyBase : MonoBehaviour
     protected virtual void UpdateEffect()
     {
         if (_effect == null) return;
-        if(_effect.RemainingDuration > 0)
+        if (_effect.RemainingDuration > 0)
         {
             _currentSpeed = _originalSpeed / _effect.Modifier;
         }
@@ -90,8 +88,8 @@ public class EnemyBase : MonoBehaviour
     }
     public bool SetEffect(Effect effect)
     {
-        
-        if(_effect == null)
+
+        if (_effect == null)
         {
             _effect = effect;
             return true;
@@ -110,16 +108,19 @@ public class EnemyBase : MonoBehaviour
         _remainingHealth -= damage;
         if (_remainingHealth <= 0)
         {
-            print("enemy died");
             FindObjectOfType<EventManager>().OnEnemyDeath?.Invoke(this);
         }
         return _remainingHealth <= 0;
     }
-
+    public void SpawnMoneyUI()
+    {
+        MoneyDropUI _dropUI = Instantiate(_moneyDropUI, transform.position, Quaternion.identity).GetComponentInChildren<MoneyDropUI>();
+        _dropUI.SetValue(_money);
+    }
+    
     public int GetRemainingHealth() => _remainingHealth;
     public int GetMaxHealth() => _maxHealth;
     public int GetMoney() => _money;
-
 }
 
 [Serializable]

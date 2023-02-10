@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public enum GamePhase { Attack, Build }
+    public enum GamePhase { Attack, Build, GameOver }
 
-    private GamePhase _gamePhase = GamePhase.Build;
+    private GamePhase _gamePhase;
 
     private WaveManager _waveManager;
     private EventManager _eventManager;
@@ -15,20 +16,24 @@ public class GameManager : MonoBehaviour
 
     private int _moneyAmount = 50;
 
+    [SerializeField] private TextMeshProUGUI _gameEndText;
+
     private void Start()
     {
         _eventManager = FindObjectOfType<EventManager>();
         _eventManager.OnEnemyDeath.AddListener(UpdateMoneyAmount);
         _eventManager.OnPhaseChange.AddListener(OnPhaseChange);
+        _eventManager.OnGameEnd.AddListener(OnGameEnd);
 
         _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
 
         _waveManager = FindObjectOfType<WaveManager>();
         _buildManager = FindObjectOfType<BuildManager>();
 
+        _eventManager.OnPhaseChange?.Invoke(GamePhase.Build);
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         switch (_gamePhase)
         {
@@ -39,10 +44,6 @@ public class GameManager : MonoBehaviour
                 _buildManager.BuildPhaseManager();
                 break;
 
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            _eventManager.OnPhaseChange?.Invoke(GamePhase.Attack);
         }
     }
 
@@ -59,7 +60,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    private void OnGameEnd(bool won)
+    {
+        _gameEndText.gameObject.SetActive(true);
+        _gameEndText.text = won ? "You won!" : "You lost!";
+        _eventManager.OnPhaseChange?.Invoke(GamePhase.GameOver);
+    }
 
     private void OnPhaseChange(GamePhase phase)
     {

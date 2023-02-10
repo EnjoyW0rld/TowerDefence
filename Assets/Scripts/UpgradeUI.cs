@@ -46,7 +46,7 @@ public class UpgradeUI : MonoBehaviour
         {
             _canvas.enabled = _canUpgrade;
         }
-        else
+        else if(phase == GameManager.GamePhase.Attack)
         {
             _canvas.enabled = false;
         }

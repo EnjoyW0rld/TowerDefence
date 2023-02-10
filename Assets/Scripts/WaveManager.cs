@@ -12,7 +12,6 @@ public class WaveManager : MonoBehaviour
     private EventManager _eventManager;
 
     private List<EnemyBase> _enemies = new List<EnemyBase>();
-    private int _enemiesReached;
 
     [SerializeField] private Wave[] _waves;
     private Queue<Wave> _waveQueue;
@@ -25,11 +24,13 @@ public class WaveManager : MonoBehaviour
     void Start()
     {
         _waveQueue = new Queue<Wave>(_waves);
-        //SetNextWave();
 
         _eventManager = FindObjectOfType<EventManager>();
         _eventManager.OnEnemyDeath.AddListener(DestroyEnemy);
         _eventManager.OnPhaseChange.AddListener(OnPhaseChange);
+
+        _eventManager.OnEnemyReached?.Invoke(_enemiesToLose);
+
         _spawnPoint = FindObjectOfType<Path>().GetFirstPoint();
     }
 
@@ -39,15 +40,17 @@ public class WaveManager : MonoBehaviour
         if (_gameStarted)
         {
             _timeTillSpawn -= Time.deltaTime;
-            if(_timeTillSpawn <= 0 && _enemiesLeft > 0)
+            if (_timeTillSpawn <= 0 && _enemiesLeft > 0)
             {
                 SpawnEnemy();
                 _timeTillSpawn = _currentWave.SpawnDelay;
                 _enemiesLeft--;
             }
-            if(_enemiesLeft == 0 && _enemies.Count == 0)
+            if (_enemiesLeft == 0 && _enemies.Count == 0)
             {
+                print("changed mode");
                 _eventManager.OnPhaseChange?.Invoke(GameManager.GamePhase.Build);
+                _eventManager.OnWaveEnd?.Invoke(_waveQueue.Count);
             }
         }
     }
@@ -84,19 +87,26 @@ public class WaveManager : MonoBehaviour
     }
     private void OnEnemyReached(EnemyBase enemy)
     {
-        _enemiesReached++;
-        if (_enemiesReached >= _enemiesToLose)
+        _enemiesToLose--;
+        if (_enemiesToLose > 0)
         {
             _enemies.Remove(enemy);
+            _eventManager.OnEnemyReached?.Invoke(_enemiesToLose);
+        }
+        else
+        {
+            _eventManager.OnGameEnd?.Invoke(false);
         }
     }
     private void DestroyEnemy(EnemyBase enemy)
     {
+        enemy.SpawnMoneyUI();
         Destroy(enemy.gameObject);
         _enemies.Remove(enemy);
     }
     private void SetNextWave()
     {
+        print("tried to deque");
         _currentWave = _waveQueue.Dequeue();
         _enemiesLeft = _currentWave.EnemyCount;
 
@@ -112,6 +122,23 @@ public class WaveManager : MonoBehaviour
             SetNextWave();
             _gameStarted = true;
         }
+        else if (phase == GameManager.GamePhase.Build)
+        {
+            _gameStarted = false;
+        }
+        else if (phase == GameManager.GamePhase.GameOver)
+        {
+            DestroyAllEnemies();
+            _gameStarted = false;
+        }
+    }
+    private void DestroyAllEnemies()
+    {
+        for (int i = 0; i < _enemies.Count; i++)
+        {
+            Destroy(_enemies[i].gameObject);
+        }
+        _enemies.Clear();
     }
 }
 
