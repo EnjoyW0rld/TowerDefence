@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class SlowingTower : Tower
 {
-    [SerializeField] private Effect _effect;
-
+    private Effect _effect;
+    public override void UpdateValues()
+    {
+        base.UpdateValues();
+        _effect = new Effect(_damage);
+    }
     public override bool TryAttackEnemy(EnemyBase[] enemies)
     {
         if (enemies == null || enemies.Length == 0) return false;

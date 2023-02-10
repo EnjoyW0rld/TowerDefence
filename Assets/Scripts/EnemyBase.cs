@@ -56,6 +56,7 @@ public class EnemyBase : MonoBehaviour
 
     protected virtual void Update()
     {
+        UpdateEffect();
         transform.position += _currentSpeed * Time.deltaTime * _direction;
         if ((_targetPostition - transform.position).magnitude < 0.2f)
         {
@@ -76,9 +77,9 @@ public class EnemyBase : MonoBehaviour
     protected virtual void UpdateEffect()
     {
         if (_effect == null) return;
-        if(_effect.Duration > 0)
+        if(_effect.RemainingDuration > 0)
         {
-            _currentSpeed = _originalSpeed * _effect.Modifier;
+            _currentSpeed = _originalSpeed / _effect.Modifier;
         }
         else
         {
@@ -89,7 +90,8 @@ public class EnemyBase : MonoBehaviour
     }
     public bool SetEffect(Effect effect)
     {
-        if(effect == null)
+        
+        if(_effect == null)
         {
             _effect = effect;
             return true;
@@ -123,7 +125,11 @@ public class EnemyBase : MonoBehaviour
 [Serializable]
 public class Effect
 {
-    public float Duration;
-    [HideInInspector] public float RemainingDuration;
-    [Tooltip("Value which enemy speed will be multiplied with")] public float Modifier;
+    [HideInInspector] public float RemainingDuration = 5;
+    [Tooltip("Value which enemy speed will be devided with")] public float Modifier;
+
+    public Effect(float modifier)
+    {
+        Modifier = modifier;
+    }
 }

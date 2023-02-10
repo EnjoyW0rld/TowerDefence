@@ -58,7 +58,7 @@ public class Tower : MonoBehaviour
     public bool IsColliding() => _isColliding;
     public int GetDamage() => _damage;
 
-    public void UpdateValues()
+    public virtual void UpdateValues()
     {
 
         _shootRadius = _properties.TowerLevels[_towerLevel].ShootRadius;

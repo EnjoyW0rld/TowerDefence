@@ -524,7 +524,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c2b9c5828bda64d8cdb4cd207d2893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sniperTower: {fileID: 1819662105908648634, guid: 17966b1217f73974abfe22161653aca8, type: 3}
+  _sniperTower: {fileID: 1819662105908648634, guid: 17966b1217f73974abfe22161653aca8, type: 3}
+  _aoeTower: {fileID: 1819662105908648634, guid: a1278063a8fd6b04db2534115a0e92c3, type: 3}
+  _slowingTower: {fileID: 1819662105908648634, guid: 41bc85b530a38da45abdc34c6ddbb212, type: 3}
 --- !u!1 &1042753675
 GameObject:
   m_ObjectHideFlags: 0

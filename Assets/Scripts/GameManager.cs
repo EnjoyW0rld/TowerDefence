@@ -16,7 +16,9 @@ public class GameManager : MonoBehaviour
     private GridMap _gridMap;
     private int _moneyAmount = 50;
 
-    [SerializeField] private GameObject sniperTower;
+    [SerializeField] private GameObject _sniperTower;
+    [SerializeField] private GameObject _aoeTower;
+    [SerializeField] private GameObject _slowingTower;
 
     private void Start()
     {
@@ -70,12 +72,20 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _currentTower = Instantiate(sniperTower, mousePos, Quaternion.identity).GetComponent<Tower>();
+            _currentTower = Instantiate(_sniperTower, mousePos, Quaternion.identity).GetComponent<Tower>();
+        }else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _currentTower = Instantiate(_slowingTower, mousePos, Quaternion.identity).GetComponent<Tower>();
         }
         else if (Input.GetKeyDown(KeyCode.Delete))
         {
             Tower tower = GetTowerOnPos(mousePos);
-            if (tower != null)
+            if(_currentTower != null)
+            {
+                Destroy(_currentTower.gameObject);
+                _currentTower = null;
+            }
+            else if (tower != null)
             {
                 _gridMap.FreeGridCell(tower.transform.position);
                 Destroy(tower.gameObject);
