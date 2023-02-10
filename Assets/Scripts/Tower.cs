@@ -69,6 +69,7 @@ public class Tower : MonoBehaviour
         _timeToShoot = _shootSpeed;
     }
 
+    public int BuildPrice() => _properties.TowerLevels[0].Price;
     /// <summary>
     /// Get the price to level up current target
     /// </summary>

@@ -5,7 +5,7 @@ using UnityEngine;
 public class GridMap : MonoBehaviour
 {
     [SerializeField] private int _density;
-    [SerializeField] private float _step;// _horizontalStep;
+    [SerializeField] private float _step;
     [SerializeField] Vector3 _gridStart;
     int[,] _grid;
 
@@ -15,7 +15,7 @@ public class GridMap : MonoBehaviour
     void Start()
     {
         RecalculateGrid();
-        OccupyPathTiles();
+        OccupyEssentialTiles();
     }
 
     private void Update()
@@ -134,13 +134,14 @@ public class GridMap : MonoBehaviour
 
 
     /// <summary>
-    /// Used to make set tiles on path to be occupied
+    /// Used to set tiles on path to be occupied
     /// </summary>
-    private void OccupyPathTiles()
+    private void OccupyEssentialTiles()
     {
 
         Path path = FindObjectOfType<Path>();
         PathPoint[] pathPoints = path.GetPathPoints();
+        //Used to occupy tiles dedicated to path
         for (int i = 0; i < pathPoints.Length - 1; i++)
         {
             if (pathPoints[i].x == pathPoints[i + 1].x)
@@ -158,6 +159,14 @@ public class GridMap : MonoBehaviour
                 {
                     _grid[x, pathPoints[i].y] = 0;
                 }
+            }
+        }
+        //Used to occupy tiles dedicated to shop
+        for (int x = 0; x < 2; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                _grid[x, y] = 0;
             }
         }
     }

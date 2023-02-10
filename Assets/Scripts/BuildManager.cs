@@ -14,6 +14,9 @@ public class BuildManager : MonoBehaviour
     [SerializeField] private SlowingTower _slowingTower;
     [SerializeField] private AOE_Tower _aoeTower;
 
+    [SerializeField] private TowerContainer[] _towerContainers;
+    private Tower[] _towers;
+
     private List<Tower> _placedTowers;
     private GameManager _gameManager;
     private EventManager _eventManager;
@@ -24,6 +27,14 @@ public class BuildManager : MonoBehaviour
         _gridMap = FindObjectOfType<GridMap>();
         _gameManager = FindObjectOfType<GameManager>();
         _eventManager = FindObjectOfType<EventManager>();
+        _eventManager.OnMoneyChange.AddListener(OnMoneyChanged);
+
+        _towers = new Tower[_towerContainers.Length];
+        for (int i = 0; i < _towerContainers.Length; i++)
+        {
+            _towers[i] = _towerContainers[i].TowerPrefab.GetComponent<Tower>();
+            _towerContainers[i].PriceText.text = "" + _towers[i].BuildPrice();
+        }
     }
 
     public void BuildPhaseManager()
@@ -33,35 +44,38 @@ public class BuildManager : MonoBehaviour
         mousePos.z = 0;
 
         mousePos = _gridMap.GetPosAtGridCenter(mousePos);
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        for (int i = 0; i < _towerContainers.Length; i++)
         {
-            if (_currentTower != null) _currentTower = null;
-            _currentTower = Instantiate(_sniperTower, mousePos, Quaternion.identity).GetComponent<Tower>();
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (_currentTower != null) _currentTower = null;
-            _currentTower = Instantiate(_slowingTower, mousePos, Quaternion.identity).GetComponent<Tower>();
-        }
-        else if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            Tower tower = GetTowerOnPos(mousePos);
-            if (_currentTower != null)
+            if (_towerContainers[i].SellectButton.IsPressed())
             {
-                Destroy(_currentTower.gameObject);
-                _currentTower = null;
-            }
-            else if (tower != null)
-            {
-                _gridMap.FreeGridCell(tower.transform.position);
-                Destroy(tower.gameObject);
-                _placedTowers.Remove(tower);
+                if (_currentTower != null)
+                {
+                    Destroy(_currentTower.gameObject);
+                    _currentTower = null;
+                }
+                _currentTower = Instantiate(_towerContainers[i].TowerPrefab, mousePos, Quaternion.identity).GetComponent<Tower>();
+                return;
             }
         }
 
         if (Input.GetMouseButtonDown(0))
         {
+        }
+
+        if (_currentTower == null) return;
+
+        _currentTower.transform.position = mousePos;
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (_gridMap.isCellEmpty(mousePos))
+            {
+                _gridMap.OccupyGridCell(mousePos);
+                _placedTowers.Add(_currentTower);
+                _eventManager.OnMoneyChange?.Invoke(_gameManager.GetMoneyAmount() - _currentTower.BuildPrice());
+                _currentTower = null;
+                return;
+            }
+
             Tower tower = GetTowerOnPos(mousePos);
             print(tower);
             if (tower != null)
@@ -74,19 +88,6 @@ public class BuildManager : MonoBehaviour
                     moneyAmount -= price;
                     _eventManager.OnMoneyChange?.Invoke(moneyAmount);
                 }
-            }
-        }
-
-        if (_currentTower == null) return;
-
-        _currentTower.transform.position = mousePos;
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (_gridMap.isCellEmpty(mousePos))
-            {
-                _gridMap.OccupyGridCell(mousePos);
-                _placedTowers.Add(_currentTower);
-                _currentTower = null;
             }
         }
 
@@ -106,12 +107,22 @@ public class BuildManager : MonoBehaviour
     }
     public List<Tower> GetPlacedTowers() => _placedTowers;
 
+    void OnMoneyChanged(int money)
+    {
+        for (int i = 0; i < _towers.Length; i++)
+        {
+            Color color = _towerContainers[i].ShopImage.color;
+            color.a = _towers[i].BuildPrice() > money ? .5f : 1f;
+            _towerContainers[i].ShopImage.color = color;
+        }
+    }
 }
 
 [Serializable]
 class TowerContainer
 {
-    public GameObject _towerPrefab;
-    public Button _selectButton;
-    public TextMeshProUGUI _priceText; 
+    public GameObject TowerPrefab;
+    public ButtonOnClick SellectButton;
+    public TextMeshProUGUI PriceText;
+    public Image ShopImage;
 }

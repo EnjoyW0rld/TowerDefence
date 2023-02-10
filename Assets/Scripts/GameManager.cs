@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     private WaveManager _waveManager;
     private EventManager _eventManager;
     private BuildManager _buildManager;
-    //private GridMap _gridMap;
+
     private int _moneyAmount = 50;
 
     private void Start()
@@ -21,12 +21,14 @@ public class GameManager : MonoBehaviour
         _eventManager.OnEnemyDeath.AddListener(UpdateMoneyAmount);
         _eventManager.OnPhaseChange.AddListener(OnPhaseChange);
 
+        _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
+
         _waveManager = FindObjectOfType<WaveManager>();
         _buildManager = FindObjectOfType<BuildManager>();
 
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         switch (_gamePhase)
         {
@@ -40,7 +42,7 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            _eventManager.OnPhaseChange?.Invoke(GamePhase.Attack);//ChangePhase(GamePhase.Attack);
+            _eventManager.OnPhaseChange?.Invoke(GamePhase.Attack);
         }
     }
 

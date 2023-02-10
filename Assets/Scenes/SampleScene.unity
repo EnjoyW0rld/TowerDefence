@@ -213,6 +213,7 @@ GameObject:
   - component: {fileID: 124466808}
   - component: {fileID: 124466810}
   - component: {fileID: 124466809}
+  - component: {fileID: 124466811}
   m_Layer: 5
   m_Name: SlowingTower
   m_TagString: Untagged
@@ -295,6 +296,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &124466811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124466807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5f5505813533447b18f50bf918bc84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &301129646
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +386,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &301129650
 RectTransform:
@@ -710,6 +723,19 @@ MonoBehaviour:
   _sniperTower: {fileID: 4143364578788849954, guid: 17966b1217f73974abfe22161653aca8, type: 3}
   _slowingTower: {fileID: 7992670728537819014, guid: 41bc85b530a38da45abdc34c6ddbb212, type: 3}
   _aoeTower: {fileID: 7886304849672536517, guid: a1278063a8fd6b04db2534115a0e92c3, type: 3}
+  _towerContainers:
+  - TowerPrefab: {fileID: 1819662105908648634, guid: 17966b1217f73974abfe22161653aca8, type: 3}
+    SellectButton: {fileID: 1950525078}
+    PriceText: {fileID: 1774450034}
+    ShopImage: {fileID: 1642774456}
+  - TowerPrefab: {fileID: 1819662105908648634, guid: a1278063a8fd6b04db2534115a0e92c3, type: 3}
+    SellectButton: {fileID: 1883021365}
+    PriceText: {fileID: 1984816509}
+    ShopImage: {fileID: 784003873}
+  - TowerPrefab: {fileID: 1819662105908648634, guid: 41bc85b530a38da45abdc34c6ddbb212, type: 3}
+    SellectButton: {fileID: 124466811}
+    PriceText: {fileID: 1890594023}
+    ShopImage: {fileID: 2051492300}
 --- !u!4 &487366654
 Transform:
   m_ObjectHideFlags: 0
@@ -842,7 +868,7 @@ MonoBehaviour:
   enemy: {fileID: 4047919244190826825, guid: df2a8cf5880cb6a40b55a9505803a415, type: 3}
   _enemiesToLose: 1
   _waves:
-  - EnemyCount: 5
+  - EnemyCount: 1
     SpawnDelay: 1
     enemyTypes:
     - Type: {fileID: 11400000, guid: 4428d83b61feb7e49830194d25042395, type: 2}
@@ -937,7 +963,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c12deddc862f7854dbb4c34f2e5bb400, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e60542b3d7bd8294283f309d08431169, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2034,6 +2060,7 @@ GameObject:
   - component: {fileID: 1883021362}
   - component: {fileID: 1883021364}
   - component: {fileID: 1883021363}
+  - component: {fileID: 1883021365}
   m_Layer: 5
   m_Name: AOETower
   m_TagString: Untagged
@@ -2116,6 +2143,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1883021365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883021361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5f5505813533447b18f50bf918bc84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1890594021
 GameObject:
   m_ObjectHideFlags: 0
@@ -2262,6 +2301,7 @@ GameObject:
   - component: {fileID: 1950525075}
   - component: {fileID: 1950525077}
   - component: {fileID: 1950525076}
+  - component: {fileID: 1950525078}
   m_Layer: 5
   m_Name: SniperTower
   m_TagString: Untagged
@@ -2343,19 +2383,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1642774456}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 405898660}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &1950525078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950525074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5f5505813533447b18f50bf918bc84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1984816507
 GameObject:
   m_ObjectHideFlags: 0
@@ -2549,7 +2589,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e60542b3d7bd8294283f309d08431169, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c12deddc862f7854dbb4c34f2e5bb400, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
