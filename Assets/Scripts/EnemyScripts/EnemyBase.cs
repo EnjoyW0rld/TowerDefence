@@ -25,6 +25,10 @@ public class EnemyBase : MonoBehaviour
 
     [HideInInspector] public UnityEvent<EnemyBase> OnReachTheEnd;
 
+    /// <summary>
+    /// Set all enemy properties based on the provided scriptable object
+    /// </summary>
+    /// <param name="enemyProperties"></param>
     public void SetValues(EnemyScriptBase enemyProperties)
     {
         GetComponent<SpriteRenderer>().sprite = enemyProperties.Sprite;
@@ -72,6 +76,9 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Apply effect to current enemy if applicable
+    /// </summary>
     protected virtual void UpdateEffect()
     {
         if (_effect == null) return;
@@ -97,7 +104,6 @@ public class EnemyBase : MonoBehaviour
         return false;
     }
 
-    private Vector3 GetDirection() => (_targetPostition - transform.position).normalized;
     /// <summary>
     /// Applies damage to intance of enemy and return if it is alive
     /// </summary>
@@ -112,12 +118,18 @@ public class EnemyBase : MonoBehaviour
         }
         return _remainingHealth <= 0;
     }
+    /// <summary>
+    /// Function spawns world canvas UI that show amount of money dropped
+    /// by this enemy
+    /// </summary>
     public void SpawnMoneyUI()
     {
         MoneyDropUI _dropUI = Instantiate(_moneyDropUI, transform.position, Quaternion.identity).GetComponentInChildren<MoneyDropUI>();
         _dropUI.SetValue(_money);
     }
     
+    private Vector3 GetDirection() => (_targetPostition - transform.position).normalized;
+
     public int GetRemainingHealth() => _remainingHealth;
     public int GetMaxHealth() => _maxHealth;
     public int GetMoney() => _money;

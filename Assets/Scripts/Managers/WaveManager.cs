@@ -48,9 +48,15 @@ public class WaveManager : MonoBehaviour
             }
             if (_enemiesLeft == 0 && _enemies.Count == 0)
             {
-                print("changed mode");
-                _eventManager.OnPhaseChange?.Invoke(GameManager.GamePhase.Build);
-                _eventManager.OnWaveEnd?.Invoke(_waveQueue.Count);
+                if (_waveQueue.Count > 0)
+                {
+                    _eventManager.OnPhaseChange?.Invoke(GameManager.GamePhase.Build);
+                    _eventManager.OnWaveEnd?.Invoke(_waveQueue.Count);
+                }
+                else
+                {
+                    _eventManager.OnGameEnd?.Invoke(true);
+                }
             }
         }
     }

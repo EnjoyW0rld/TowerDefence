@@ -10,10 +10,6 @@ public class BuildManager : MonoBehaviour
     private GridMap _gridMap;
     private Tower _currentTower;
 
-    [SerializeField] private SingleTargetTower _sniperTower;
-    [SerializeField] private SlowingTower _slowingTower;
-    [SerializeField] private AOE_Tower _aoeTower;
-
     [SerializeField] private TowerContainer[] _towerContainers;
     private Tower[] _towers;
 
