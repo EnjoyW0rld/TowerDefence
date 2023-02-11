@@ -9,10 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28df1b1b32f86c74496b4539f67bb1e4, type: 3}
-  m_Name: TankEnemy
+  m_Script: {fileID: 11500000, guid: b977fc5a183d0584fb8da4c35c6e1416, type: 3}
+  m_Name: SlowingTowerProperty
   m_EditorClassIdentifier: 
-  Health: 5
-  Speed: 1
-  Money: 10
-  Sprite: {fileID: 21300000, guid: 70632ddfe8e71b04b8f90ef7e29a9e98, type: 3}
+  TowerLevels:
+  - ShootRadius: 2
+    ShootSpeed: 3
+    Damage: 2
+    Price: 40
+  - ShootRadius: 3
+    ShootSpeed: 3
+    Damage: 3
+    Price: 40

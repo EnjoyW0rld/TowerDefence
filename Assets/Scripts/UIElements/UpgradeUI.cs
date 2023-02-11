@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Class used to show if tower can be upgraded using current money
+/// Uses world UI element
+/// </summary>
 public class UpgradeUI : MonoBehaviour
 {
     [SerializeField] private Canvas _canvas;
@@ -25,7 +29,10 @@ public class UpgradeUI : MonoBehaviour
         _eventManager.OnMoneyChange.AddListener(OnMoneyChange);
     }
 
-
+    /// <summary>
+    /// When money changed checks if tower can be upgraded
+    /// </summary>
+    /// <param name="money"></param>
     private void OnMoneyChange(int money)
     {
         int price = _parentTower.LvlUpPrice();
@@ -40,6 +47,10 @@ public class UpgradeUI : MonoBehaviour
         }
         _canvas.enabled = _canUpgrade;
     }
+    /// <summary>
+    /// Shows UI element based on current phase
+    /// </summary>
+    /// <param name="phase"></param>
     private void OnPhaseChange(GameManager.GamePhase phase)
     {
         if (phase == GameManager.GamePhase.Build)
@@ -51,6 +62,9 @@ public class UpgradeUI : MonoBehaviour
             _canvas.enabled = false;
         }
     }
+    /// <summary>
+    /// Unsubscribes from all events
+    /// </summary>
     private void OnDestroy()
     {
         _eventManager.OnPhaseChange.RemoveListener(OnPhaseChange);

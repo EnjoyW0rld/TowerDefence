@@ -6,35 +6,18 @@ public class GridMap : MonoBehaviour
 {
     [SerializeField] private int _density;
     [SerializeField] private float _step;
-    [SerializeField] Vector3 _gridStart;
-    int[,] _grid;
+    [SerializeField] private Vector3 _gridStart;
+    private int[,] _grid;
 
-    Vector3 _topRight;
-    [SerializeField] private bool _showGrid;
+    private Vector3 _topRight;
+    [SerializeField] private bool _showGrid; //enables or disables drawing grid gizmos
 
-    [SerializeField] private GameObject _gridPalka;
 
     void Start()
     {
         RecalculateGrid();
         OccupyEssentialTiles();
-        Vector3 ff = _gridStart + new Vector3(0, _step * 3, 0);
-        GameObject temp = Instantiate(_gridPalka, ff, Quaternion.identity);
-        Vector3 scale = temp.transform.localScale;
-        scale.x = _topRight.x * 2;
-        temp.transform.localScale = scale;
     }
-
-    private void Update()
-    {
-        Vector3 mousePos = CameraToWorld(Input.mousePosition);
-        SnapToGrid(mousePos);
-    }
-
-
-    public Vector3[] GetGridBoundaries() => new Vector3[] { _gridStart, _topRight };
-    public int[] GetGridDimensions() => new int[] { _grid.GetLength(0), _grid.GetLength(1) };
-    public float GetStep() => _step;
 
     private Vector3 CameraToWorld(Vector3 vec)
     {
@@ -52,12 +35,11 @@ public class GridMap : MonoBehaviour
             }
         }
     }
-    void SnapToGrid(Vector3 pos)
-    {
-        int[] gridNumber = GetGridNumber(pos);
-        Vector3 clampedPos = new Vector3(gridNumber[0] * _step, gridNumber[1] * _step);
-        transform.position = _gridStart + clampedPos;
-    }
+
+    public Vector3[] GetGridBoundaries() => new Vector3[] { _gridStart, _topRight };
+    public int[] GetGridDimensions() => new int[] { _grid.GetLength(0), _grid.GetLength(1) };
+    public float GetStep() => _step;
+
     /// <summary>
     /// Returns grid number based on provided vector3 position
     /// </summary>
@@ -80,6 +62,11 @@ public class GridMap : MonoBehaviour
         return res;
     }
 
+    /// <summary>
+    /// Returns position on the middle of the grid cell near provided position
+    /// </summary>
+    /// <param name="gridNum"></param>
+    /// <returns></returns>
     public Vector3 GetPosAtGridCenter(int[] gridNum)
     {
         Vector3 res = new Vector3(gridNum[0] * _step + _step / 2, gridNum[1] * _step + _step / 2, 0);
@@ -91,15 +78,24 @@ public class GridMap : MonoBehaviour
         return GetPosAtGridCenter(gridNum);
     }
 
-    public bool isCellEmpty(Vector3 pos)
+    /// <summary>
+    /// Returns if grid cell is empty on provided position
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    public bool IsCellEmpty(Vector3 pos)
     {
-        return isCellEmpty(GetGridNumber(pos));
+        return IsCellEmpty(GetGridNumber(pos));
     }
-    public bool isCellEmpty(int[] gridNumber)
+    public bool IsCellEmpty(int[] gridNumber)
     {
         return _grid[gridNumber[0], gridNumber[1]] == 1;
     }
 
+    /// <summary>
+    /// Occupies grid cell on provided position
+    /// </summary>
+    /// <param name="pos"></param>
     public void OccupyGridCell(Vector3 pos)
     {
         OccupyGridCell(GetGridNumber(pos));
@@ -114,6 +110,10 @@ public class GridMap : MonoBehaviour
         _grid[gridNumber[0], gridNumber[1]] = 0;
     }
 
+    /// <summary>
+    /// Makes grid cell on provided position free
+    /// </summary>
+    /// <param name="pos"></param>
     public void FreeGridCell(Vector3 pos)
     {
         FreeGridCell(GetGridNumber(pos));
@@ -123,7 +123,9 @@ public class GridMap : MonoBehaviour
         _grid[gridNumber[0], gridNumber[1]] = 1;
     }
 
-
+    /// <summary>
+    /// Recaclulates step for grid
+    /// </summary>
     [ContextMenu("Recalculate grid")]
     private void RecalculateGrid()
     {
@@ -132,7 +134,6 @@ public class GridMap : MonoBehaviour
         _gridStart = CameraToWorld(new Vector3(rect.x, rect.y));
         _topRight = CameraToWorld(new Vector3(rect.xMax, rect.yMax));
 
-        float aspect = Camera.main.aspect;
         _step = (_topRight.y - _gridStart.y) / 9 / _density;
         _grid = new int[(int)((_topRight.x - _gridStart.x) / _step), (int)((_topRight.y - _gridStart.y) / _step) + 1];
         FillGrid();

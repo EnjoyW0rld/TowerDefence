@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class AOE_Tower : Tower
 {
+    /// <summary>
+    /// Tries to attack all enemies in range
+    /// </summary>
+    /// <param name="enemies"></param>
+    /// <returns></returns>
     public override bool TryAttackEnemy(EnemyBase[] enemies)
     {
         if (enemies == null || enemies.Length == 0) return false;

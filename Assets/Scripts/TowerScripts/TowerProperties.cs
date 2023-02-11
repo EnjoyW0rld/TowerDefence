@@ -11,7 +11,6 @@ public class TowerProperties : ScriptableObject
 [Serializable]
 public class TowerLevel
 {
-    
     [Min(0)] public float ShootRadius;
     [Min(0)] public float ShootSpeed;
     [Min(0)] public int Damage;

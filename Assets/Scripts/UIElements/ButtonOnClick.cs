@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class used to check if button was clicked from code without connecting
+/// any external function to OnClick event
+/// </summary>
 [RequireComponent(typeof(Button))]
 public class ButtonOnClick : MonoBehaviour
 {

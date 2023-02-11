@@ -94,9 +94,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2614442612187929287}
   - component: {fileID: 1169425661526712533}
-  - component: {fileID: 4143364578788849954}
   - component: {fileID: 5733437215044360291}
   - component: {fileID: -2165363430647080382}
+  - component: {fileID: 827553510989229529}
   m_Layer: 0
   m_Name: SniperTower
   m_TagString: Untagged
@@ -173,21 +173,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4143364578788849954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1819662105908648634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31ab931f61a7daf40bac97dc4f32466d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _properties: {fileID: 11400000, guid: 13a380df23500684980f9dbb8453882d, type: 2}
-  _boxCollider: {fileID: 0}
-  _radiusCircle: {fileID: 8720339418494904462}
 --- !u!61 &5733437215044360291
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -235,6 +220,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &827553510989229529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819662105908648634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0052516c0973ab459be29f290b2fbb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _properties: {fileID: 11400000, guid: 13a380df23500684980f9dbb8453882d, type: 2}
+  _radiusCircle: {fileID: 8720339418494904462}
 --- !u!1 &3611553795421055994
 GameObject:
   m_ObjectHideFlags: 0

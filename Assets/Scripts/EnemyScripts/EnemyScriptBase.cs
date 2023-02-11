@@ -8,5 +8,5 @@ public class EnemyScriptBase : ScriptableObject
     public int Health;
     public float Speed;
     public int Money;
-    public Sprite Sprite;
+    public Sprite EnemySprite;
 }

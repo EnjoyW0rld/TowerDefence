@@ -26,12 +26,14 @@ public class WaveManager : MonoBehaviour
         _waveQueue = new Queue<Wave>(_waves);
 
         _eventManager = FindObjectOfType<EventManager>();
+        _spawnPoint = FindObjectOfType<Path>().GetFirstPoint();
+
         _eventManager.OnEnemyDeath.AddListener(DestroyEnemy);
         _eventManager.OnPhaseChange.AddListener(OnPhaseChange);
 
         _eventManager.OnEnemyReached?.Invoke(_enemiesToLose);
 
-        _spawnPoint = FindObjectOfType<Path>().GetFirstPoint();
+        _eventManager.OnWaveEnd?.Invoke(_waveQueue.Count);
     }
 
 
@@ -46,7 +48,7 @@ public class WaveManager : MonoBehaviour
                 _timeTillSpawn = _currentWave.SpawnDelay;
                 _enemiesLeft--;
             }
-            if (_enemiesLeft == 0 && _enemies.Count == 0)
+            if (_enemiesLeft == 0 && _enemies.Count == 0) //If no enemies left
             {
                 if (_waveQueue.Count > 0)
                 {
@@ -64,23 +66,6 @@ public class WaveManager : MonoBehaviour
     public bool TryAttack(Tower tower)
     {
         return tower.TryAttackEnemy(_enemies.ToArray());
-        /*
-        for (int i = 0; i < _enemies.Count; i++)
-        {
-            float distanceToTower = (_enemies[i].transform.position - tower.transform.position).magnitude;
-            if (distanceToTower <= tower.GetShootRadius())
-            {
-                if (_enemies[i].DamageThis(tower.GetDamage()))
-                {
-                    //Destroy(_enemies[i].gameObject);
-                    //_enemies.Remove(_enemies[i]);
-                    //_eventManager.OnEnemyDeath?.Invoke(_enemies[i]);
-                }
-                return true;
-            }
-        }
-        return false;
-         */
     }
 
     private void SpawnEnemy()
@@ -89,8 +74,12 @@ public class WaveManager : MonoBehaviour
         recentEnemy.SetValues(_currentWave.GetRandomEnemy()); //Set scriptable object
         recentEnemy.OnReachTheEnd.AddListener(OnEnemyReached); //add event when enemy reaches end
         _enemies.Add(recentEnemy);
-
     }
+    /// <summary>
+    /// Called when enemy reaches the last point on path.
+    /// Checks if game is over
+    /// </summary>
+    /// <param name="enemy"></param>
     private void OnEnemyReached(EnemyBase enemy)
     {
         _enemiesToLose--;
@@ -112,13 +101,11 @@ public class WaveManager : MonoBehaviour
     }
     private void SetNextWave()
     {
-        print("tried to deque");
         _currentWave = _waveQueue.Dequeue();
         _enemiesLeft = _currentWave.EnemyCount;
-
     }
     /// <summary>
-    /// Starts next wave
+    /// Behaves based on passed phase
     /// </summary>
     /// <param name="phase">Current game phase</param>
     private void OnPhaseChange(GameManager.GamePhase phase)
@@ -151,7 +138,6 @@ public class WaveManager : MonoBehaviour
 [Serializable]
 class Wave
 {
-
     public int EnemyCount;
     public float SpawnDelay;
     public EnemyType[] enemyTypes;

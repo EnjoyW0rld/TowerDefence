@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b977fc5a183d0584fb8da4c35c6e1416, type: 3}
-  m_Name: SlowingTowerProperty
+  m_Script: {fileID: 11500000, guid: 28df1b1b32f86c74496b4539f67bb1e4, type: 3}
+  m_Name: FastEnemy
   m_EditorClassIdentifier: 
-  TowerLevels:
-  - ShootRadius: 2
-    ShootSpeed: 3
-    Damage: 2
-    Price: 0
+  Health: 2
+  Speed: 4
+  Money: 5
+  EnemySprite: {fileID: 21300000, guid: 01344bf044d85684f960754416aae48a, type: 3}

@@ -31,7 +31,7 @@ public class EnemyBase : MonoBehaviour
     /// <param name="enemyProperties"></param>
     public void SetValues(EnemyScriptBase enemyProperties)
     {
-        GetComponent<SpriteRenderer>().sprite = enemyProperties.Sprite;
+        GetComponent<SpriteRenderer>().sprite = enemyProperties.EnemySprite;
 
 
         _enemyProperties = enemyProperties;

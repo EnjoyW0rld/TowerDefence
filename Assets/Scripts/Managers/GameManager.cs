@@ -7,9 +7,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public enum GamePhase { Attack, Build, GameOver }
-
     private GamePhase _gamePhase;
 
+    //managers
     private WaveManager _waveManager;
     private EventManager _eventManager;
     private BuildManager _buildManager;
@@ -21,16 +21,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _eventManager = FindObjectOfType<EventManager>();
+        _waveManager = FindObjectOfType<WaveManager>();
+        _buildManager = FindObjectOfType<BuildManager>();
+
         _eventManager.OnEnemyDeath.AddListener(UpdateMoneyAmount);
         _eventManager.OnPhaseChange.AddListener(OnPhaseChange);
         _eventManager.OnGameEnd.AddListener(OnGameEnd);
 
         _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
-
-        _waveManager = FindObjectOfType<WaveManager>();
-        _buildManager = FindObjectOfType<BuildManager>();
-
         _eventManager.OnPhaseChange?.Invoke(GamePhase.Build);
+
     }
 
     private void Update()
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         List<Tower> placedTowers = _buildManager.GetPlacedTowers();
         for (int i = 0; i < placedTowers.Count; i++)
         {
-            if (!placedTowers[i].canShoot) continue;
+            if (!placedTowers[i].CanShoot) continue;
             if (_waveManager.TryAttack(placedTowers[i]))
             {
                 placedTowers[i].UpdateCooldown();
@@ -71,9 +71,21 @@ public class GameManager : MonoBehaviour
     {
         _gamePhase = phase;
     }
+    /// <summary>
+    /// Updates money amount based on amount enemy drops
+    /// </summary>
+    /// <param name="enemy"></param>
     private void UpdateMoneyAmount(EnemyBase enemy)
     {
-        _moneyAmount += enemy.GetMoney();
+        UpdateMoneyAmount(enemy.GetMoney());
+    }
+    /// <summary>
+    /// Summirezes current money with provided parameter
+    /// </summary>
+    /// <param name="moneyToAdd"></param>
+    public void UpdateMoneyAmount(int moneyToAdd)
+    {
+        _moneyAmount += moneyToAdd;
         _eventManager.OnMoneyChange?.Invoke(_moneyAmount);
     }
     public int GetMoneyAmount() => _moneyAmount;

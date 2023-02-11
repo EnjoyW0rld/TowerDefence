@@ -17,10 +17,8 @@ public class Tower : MonoBehaviour
     protected int _damage;
     private float _timeToShoot;
 
-    [SerializeField] private BoxCollider2D _boxCollider;
-    [SerializeField, Min(0)] private Transform _radiusCircle;
-    private bool _isColliding;
-    public bool canShoot { get; private set; }
+    [SerializeField] private Transform _radiusCircle;
+    public bool CanShoot { get; private set; }
 
 
 
@@ -33,32 +31,23 @@ public class Tower : MonoBehaviour
     {
         if (_timeToShoot <= 0)
         {
-            canShoot = true;
+            CanShoot = true;
             return;
         }
         _timeToShoot -= Time.deltaTime;
     }
-    /*
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
-    {
-        _isColliding = true;
-    }
-    protected virtual void OnCollisionExit2D(Collision2D collision)
-    {
-        _isColliding = false;
-    }
-     */
-
+    
     public void UpdateCooldown()
     {
-        canShoot = false;
+        CanShoot = false;
         _timeToShoot = _shootSpeed;
     }
     public float GetShootRadius() => _shootRadius;
-    public bool IsColliding() => _isColliding;
     public int GetDamage() => _damage;
-
-    public virtual void UpdateValues()
+    /// <summary>
+    /// Sets new radius, attack and damage based on current tower lvl
+    /// </summary>
+    protected virtual void UpdateValues()
     {
 
         _shootRadius = _properties.TowerLevels[_towerLevel].ShootRadius;
@@ -84,7 +73,12 @@ public class Tower : MonoBehaviour
         _towerLevel++;
         UpdateValues();
     }
-
+    /// <summary>
+    /// Attacks single enemy in range
+    /// Override to create different behaviour
+    /// </summary>
+    /// <param name="enemies">All enemies currently on the scene</param>
+    /// <returns>true if succeded attack</returns>
     public virtual bool TryAttackEnemy(EnemyBase[] enemies)
     {
         if (enemies.Length == 0 || enemies == null)

@@ -5,7 +5,7 @@ using UnityEngine;
 public class SlowingTower : Tower
 {
     private Effect _effect;
-    public override void UpdateValues()
+    protected override void UpdateValues()
     {
         base.UpdateValues();
         _effect = new Effect(_damage);
